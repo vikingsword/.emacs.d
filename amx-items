@@ -1,0 +1,22 @@
+
+;; ----- amx-history -----
+(
+ package-delete
+ avy-kill-whole-line
+ avy-move-region
+ avy-copy-region
+ avy-copy-line
+ bookmark-delete
+ cd
+)
+
+;; ----- amx-data -----
+(
+ (bookmark-delete . 1)
+ (package-delete . 4)
+ (avy-copy-line . 1)
+ (avy-move-region . 5)
+ (avy-copy-region . 2)
+ (avy-kill-whole-line . 1)
+ (undo-tree-save-history . 1)
+)
