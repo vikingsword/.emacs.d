@@ -1,3 +1,4 @@
+
 ;;; init.el --- Load the full configuration -*- lexical-binding: t -*-
 ;;; Commentary:
 
@@ -5,74 +6,47 @@
 ;; a number of other files.
 
 ;;; Code:
+
 (let ((minver "25.1"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
 (when (version< emacs-version "26.1")
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)) 
-; 设定源码加载路径
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)) ; 设定源码加载路径
 ;; (require 'init-benchmarking) ;; Measure startup time
 
-
-(defconst *spell-check-support-enabled* nil) 
-;; Enable with t if you prefer
+(defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
 
 ;; Adjust garbage collection thresholds during startup, and thereafter
 
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
-
-;; 设置腾讯MELPA仓库镜像
-(require 'package)
-(setq package-archives '(("gnu"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
-                         ("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/")))
-;;(package-initialize) 		
-;; 有package.el的Emacs都不需要手动添加(package-initialize) Emacs启动的时候会自动运行的
+;(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      ;(init-gc-cons-threshold (* 128 1024 1024)))
+  ;(setq gc-cons-threshold init-gc-cons-threshold)
+  ;(add-hook 'emacs-startup-hook
+           ; (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
 
-;; 启动Emacs首先加载use-package插件
-(eval-when-compile
-  (require 'use-package))
-  
-;; 把一组特定场景的命令组织到一起,通过简单按键来进行调用
-(use-package hydra
-  :ensure t)
-
-(use-package use-package-hydra
-  :ensure t
-  :after hydra) 
-			
-
-;; 一些基本配置
-(electric-pair-mode t)                       
-; 自动补全括号
-(add-hook 'prog-mode-hook #'show-paren-mode) 
-; 编程模式下，光标在括号上时高亮另一个括号
-(column-number-mode t)                       
-; 在 Mode line 上显示列号
-(global-auto-revert-mode t)                  
-; 当另一程序修改了文件时，让 Emacs 及时刷新 Buffer
-(delete-selection-mode t)                    
-; 选中文本后输入文本会替换文本（更符合我们习惯了的其它编辑器的逻辑）
-(setq inhibit-startup-message t)             
-; 关闭启动 Emacs 时的欢迎界面
-(setq make-backup-files nil)                 
-; 关闭文件自动备份
-(add-hook 'prog-mode-hook #'hs-minor-mode)   
-; 编程模式下，可以折叠代码块
-(global-display-line-numbers-mode 1)         
-; 在 Window 显示行号
-(tool-bar-mode -1)                           
-; 关闭 Tool bar
+(electric-pair-mode t)                       ; 自动补全括号
+(add-hook 'prog-mode-hook #'show-paren-mode) ; 编程模式下，光标在括号上时高亮另一个括号
+(column-number-mode t)                       ; 在 Mode line 上显示列号
+(global-auto-revert-mode t)                  ; 当另一程序修改了文件时，让 Emacs 及时刷新 Buffer
+(delete-selection-mode t)                    ; 选中文本后输入文本会替换文本（更符合我们习惯了的其它编辑器的逻辑）
+(setq inhibit-startup-message t)             ; 关闭启动 Emacs 时的欢迎界面
+(setq make-backup-files nil)                 ; 关闭文件自动备份
+(add-hook 'prog-mode-hook #'hs-minor-mode)   ; 编程模式下，可以折叠代码块
+(global-display-line-numbers-mode 1)         ; 在 Window 显示行号
+(tool-bar-mode -1)                           ; 关闭 Tool bar
 (when (display-graphic-p) (toggle-scroll-bar -1)) ; 图形界面时关闭滚动条
-	
-;; 配置快捷键	
+
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+
+;; set shortkey	
 (global-set-key (kbd "RET") 'newline-and-indent) ; 回车另起一行并缩进
 (global-set-key (kbd "M-p") 'previous-line)		; 光标向上移动
 (global-set-key (kbd "M-n") 'next-line)			; 光标向下移动
@@ -85,37 +59,56 @@
 (global-set-key (kbd "M-c") 'kill-ring-save)    ; M-c 为复制
 (global-set-key (kbd "M-v") 'yank)				; 插入已移除文本 -- 黏贴
 (global-set-key (kbd "M-,") 'pop-global-mark)	; 跳转到上一标记
-(global-set-key (kbd "<tab>") 'set-mark-command)
+;(global-set-key (kbd "<tab>") 'set-mark-command)
 (global-set-key (kbd "M-/") 'hippie-expand)		; 代码文本补全
-
+(global-set-key (kbd "M-w") 'scroll-down-command)         ; pageup
+(global-set-key (kbd "M-s") 'scroll-up-command)       ; pagedowm
+(global-set-key (kbd "M-k") 'kill-region)               ; cut region
+(global-set-key (kbd "C-M-p") 'scroll-other-window)   ; let other window up
+(global-set-key (kbd "C-M-n") 'scroll-other-window-down) ; let other window pagedowm
+(global-set-key (kbd "M-l") 'backward-kill-word)   ;; remove custor left word
+;; decide replace in the future
+(global-set-key (kbd "M-r") 'delete-char)    ;; remove custor right word
+		
 
 (global-set-key (kbd "C-j") nil)
 ;; 删去光标所在行（在图形界面时可以用 "C-S-<DEL>"，终端常会拦截这个按法)
 (global-set-key (kbd "C-y") 'kill-whole-line)
-
-
-(require 'package)
-(setq package-archives '(("gnu"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
-                         ("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/")))
-;;(package-initialize)
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes '(atom-one-dark))
+ '(custom-safe-themes
+   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "57e3f215bef8784157991c4957965aa31bac935aca011b29d7d8e113a652b693" "05626f77b0c8c197c7e4a31d9783c4ec6e351d9624aa28bc15e7f6d6a6ebd926" "171d1ae90e46978eb9c342be6658d937a83aaa45997b1d7af7657546cae5985b" "77fc61aea21dbce6db8cdea21e0d8e430cc576dd0b3383eb6ba3fa818e58613e" default))
  '(package-selected-packages
-   '(yasnippet-snippets yasnippet company-box company google-this rainbow-delimiters multiple-cursors marginalia good-scroll undo-tree mwim ace-window amx counsel flycheck ivy use-package))
- '(warning-suppress-log-types '((use-package))))
+   '(doom-themes yasnippet-snippets use-package-hydra undo-tree treemacs-projectile rainbow-delimiters mwim multiple-cursors marginalia magit lsp-ui lsp-ivy google-this good-scroll flycheck dracula-theme dashboard dap-mode counsel-projectile company-box color-theme-sanityinc-tomorrow atom-one-dark-theme amx afternoon-theme)))
+
+(require 'color-theme-sanityinc-tomorrow)
+
+
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "SystemWindow" :foreground "SystemWindowText" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "outline" :family "JetBrains Mono")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#282C34" :foreground "#ABB2BF" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "google" :family "JetBrains Mono")))))
 
-;;; use-package 包管理插件
+
+
+(eval-when-compile
+  (require 'use-package))
+
+;; 把一组特定场景的命令组织到一起,通过简单按键来进行调用
+(use-package hydra
+  :ensure t)
+
+(use-package use-package-hydra
+  :ensure t
+  :after hydra)
 
 ;; counsel 插件
 (use-package counsel
@@ -190,12 +183,12 @@
   ("q"   nil "quit" :color blue)))
   
 ;; 美化model line
-(add-to-list 'custom-theme-load-path (expand-file-name "themes"
-                                                       user-emacs-directory))
-(use-package smart-mode-line
-  :config
-  (setq sml/theme 'atom-one-dark)
-  (sml/setup))
+;(add-to-list 'custom-theme-load-path (expand-file-name "themes"
+;                                                      user-emacs-directory))
+;(use-package smart-mode-line
+;  :config
+;  (setq sml/theme 'atom-one-dark)
+;  (sml/setup))
   
 ;; 美化滚动条
 (use-package good-scroll
@@ -259,12 +252,17 @@ Up^^             Down^^           Miscellaneous           % 2(mc/num-cursors) cu
  (use-package dashboard
   :ensure t
   :config
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   (setq dashboard-banner-logo-title "Welcome Vikingar!") ;; 个性签名，随读者喜好设置
-  ;; (setq dashboard-projects-backend 'projectile) ;; 读者可以暂时注释掉这一行，等安装了 projectile 后再使用
-  (setq dashboard-startup-banner 'nil) ;; 也可以自定义图片
+  (setq dashboard-projects-backend 'projectile) ;; 读者可以暂时注释掉这一行，等安装了 projectile 后再使用
+  (setq dashboard-startup-banner "/home/vikingar/Pictures/emacs/6.png") ;; 也可以自定义图片
   (setq dashboard-items '((recents  . 5)   ;; 显示多少个最近文件
 			  (bookmarks . 5)  ;; 显示多少个最近书签
 			  (projects . 10))) ;; 显示多少个最近项目
+  ;; Content is not centered by default. To center, set
+  (setq dashboard-center-content t)
+  ;; To disable shortcut "jump" indicators for each section, set
+  (setq dashboard-show-shortcuts nil)
   (dashboard-setup-startup-hook))
  
 ;; 高亮括号
@@ -320,9 +318,140 @@ Up^^             Down^^           Miscellaneous           % 2(mc/num-cursors) cu
 (use-package yasnippet-snippets
   :ensure t
   :after yasnippet)
-  
-  
-  
+
+
+;; code analysis : lsp
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l"
+	lsp-file-watch-threshold 500)
+  :hook 
+  (lsp-mode . lsp-enable-which-key-integration) ; which-key integration
+  :commands (lsp lsp-deferred)
+  :config
+    (setq lsp-completion-provider :none) ;; 阻止 lsp 重新设置 company-backend 而覆盖我们 yasnippet 的设置
+    (setq lsp-headerline-breadcrumb-enable t))
+
+(use-package lsp-ui
+  :ensure t
+  :config
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  (setq lsp-ui-doc-position 'top))
+
+(use-package lsp-ivy
+  :ensure t
+  :after (lsp-mode))
+
+;; debug 
+(use-package dap-mode
+  :ensure t
+  :after hydra lsp-mode
+  :commands dap-debug
+  :custom
+  (dap-auto-configure-mode t)
+  :config
+  (dap-ui-mode 1)
+  :hydra
+  (hydra-dap-mode
+   (:color pink :hint nil :foreign-keys run)
+   "
+^Stepping^          ^Switch^                 ^Breakpoints^         ^Debug^                     ^Eval
+^^^^^^^^----------------------------------------------------------------------------------------------------------------
+_n_: Next           _ss_: Session            _bb_: Toggle          _dd_: Debug                 _ee_: Eval
+_i_: Step in        _st_: Thread             _bd_: Delete          _dr_: Debug recent          _er_: Eval region
+_o_: Step out       _sf_: Stack frame        _ba_: Add             _dl_: Debug last            _es_: Eval thing at point
+_c_: Continue       _su_: Up stack frame     _bc_: Set condition   _de_: Edit debug template   _ea_: Add expression.
+_r_: Restart frame  _sd_: Down stack frame   _bh_: Set hit count   _ds_: Debug restart
+_Q_: Disconnect     _sl_: List locals        _bl_: Set log message
+                  _sb_: List breakpoints
+                  _sS_: List sessions
+"
+   ("n" dap-next)
+   ("i" dap-step-in)
+   ("o" dap-step-out)
+   ("c" dap-continue)
+   ("r" dap-restart-frame)
+   ("ss" dap-switch-session)
+   ("st" dap-switch-thread)
+   ("sf" dap-switch-stack-frame)
+   ("su" dap-up-stack-frame)
+   ("sd" dap-down-stack-frame)
+   ("sl" dap-ui-locals)
+   ("sb" dap-ui-breakpoints)
+   ("sS" dap-ui-sessions)
+   ("bb" dap-breakpoint-toggle)
+   ("ba" dap-breakpoint-add)
+   ("bd" dap-breakpoint-delete)
+   ("bc" dap-breakpoint-condition)
+   ("bh" dap-breakpoint-hit-condition)
+   ("bl" dap-breakpoint-log-message)
+   ("dd" dap-debug)
+   ("dr" dap-debug-recent)
+   ("ds" dap-debug-restart)
+   ("dl" dap-debug-last)
+   ("de" dap-debug-edit-template)
+   ("ee" dap-eval)
+   ("ea" dap-ui-expressions-add)
+   ("er" dap-eval-region)
+   ("es" dap-eval-thing-at-point)
+   ("q" nil "quit" :color blue)
+   ("Q" dap-disconnect :color red)))
+;; debug end
+
+
+;; projettitle with lsp
+(use-package projectile
+  :ensure t
+  :bind (("C-c p" . projectile-command-map))
+  :config
+  (setq projectile-mode-line "Projectile")
+  (setq projectile-track-known-projects-automatically nil))
+
+(use-package counsel-projectile
+  :ensure t
+  :after (projectile)
+  :init (counsel-projectile-mode))
+
+;; version management
+(use-package magit
+  :ensure t)
+
+;; project management
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (treemacs-tag-follow-mode)
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ;; ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag))
+  (:map treemacs-mode-map
+	("/" . treemacs-advanced-helpful-hydra)))
+
+(use-package treemacs-projectile
+  :ensure t
+  :after (treemacs projectile))
+
+(use-package lsp-treemacs
+  :ensure t
+  :after (treemacs lsp))
+
+
+
+
+
+
+
+
 (provide 'init)
 
 ;;; init.el ends here
+
