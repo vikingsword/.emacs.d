@@ -1,0 +1,34 @@
+<2023-01-07 Sat 20:02>
+# This are shortcut keys in emacs for remember and search
+  
+
+* basic shortcut key
+  1. direct
+     + M-p :: pervious line
+     + M-n :: next line
+     + M-b :: backward char
+     + M-f :: forward char
+     + M-a :: move beginning of line
+     + M-e :: move end of line
+     + M-w :: scroll down command
+     + M-s :: scroll up command
+     + M-; :: forward word
+     + M-' :: backward word
+     + M-c :: copy choose section
+     + M-v :: paste choose section
+     + M-k :: cut choose section
+     + M-l :: backward kill word(kill previous word)
+     + C-y :: kill whole line 
+     + S-M-up :: move this line to previous line
+     + S-M-down :: move this line to next line
+     + C-M-p :: scroll other window down
+     + C-M-n :: scroll other window up 
+     + M-/ :: code completion
+  2. function
+     + C-c C-L :: insert file, email and so on
+        
+    
+
+
+
+* 
