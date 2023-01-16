@@ -1,0 +1,8 @@
+# there are bugs in arch linux
+* libcrypt.so.1: cannot open shared object file: No such file or directory-listing-before-f
+  the image is [[file:image/2023-01-14_20-21.png][bug screenshot]]
+1. firstly, review install information or run `ldd $(which /usr/local/phpstudy/.../nginx)`
+   to see detail
+2. you can simply run  `sudo pacman -Ss libcrypt` to see package availiable
+   then run `sudo pacman -S libxcrypt-coompat`
+   

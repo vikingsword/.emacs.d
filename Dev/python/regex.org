@@ -1,0 +1,2 @@
+* learn regex of python from https://www.byhy.net/tut/py/extra/regex/
+* view code and info in /home/vikingar/Dev/python/project/Network/re

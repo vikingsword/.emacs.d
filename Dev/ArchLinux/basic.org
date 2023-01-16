@@ -1,0 +1,36 @@
+# This are some tips which enable you to learn arch linux
+* how to install package in AUR
+    1. search a package you want to install in https://aur.archlinux.org/
+    2. click xxx.git and you will copy this link
+    3. open up termial input *git clone xxx.git*
+    4. cd <your package>
+    5. makepkg -si :: build your package
+      or =makepkg= then =sudo pacman1 -U xxx.pkg.tar.zst=
+    ps: you can use `yay` which is AUR helper let you install pacakage in
+        AUR simple, ==yay -S sfotname== (other like yout would be ok too)
+	`-S` :: install soft and all its dependence
+      
+* basic pacman command
+** install soft
+1. pacman -S softname1,softname2  :: install soft1 and soft2
+2. pacman -S --needed soft1,soft2 :: install soft1 and soft2 which is not lastest
+3. pacman -Syu  ::  update system
+6. pacman -U softname.pkg.tar.gz  :: install local package
+7. pacman -U http://www.xxx.com/repo/xxx.pkg.tar.xz  :: install remote package
+** uninstall soft 
+1. pacman -R softname  :: delete all package but hold all dependence installed
+2. pacman -Rs softname  :: delete soft and dependence which only belong to this soft
+3. pacman -Ru softname  :: delete soft and any used dependence
+** search soft
+1. pacman -Ss key  :: search soft in package cab
+2. pacman -Qs key  :: search installed soft
+3. pacman -Qt key  :: search unused soft
+4. pacman -Ssq key :: make search result simple
+5. pacman -Q softname  :: search installed soft and package information
+6. pacman -Q  :: list all installed package   
+** clear cache
+1. pacman -Sc  :: clear unused package located in /var/cache/pacman/pkg/
+2. pacman -Scc :: clear all cache file
+
+
+
